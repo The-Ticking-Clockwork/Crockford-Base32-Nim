@@ -22,3 +22,7 @@ echo encoded  # Output is `2RD`
 let decoded = int.decode("2RD")
 echo decoded  # Output is `2829`
 ```
+
+The `encode` functions additionally have a length parameter allowing
+you to truncate the generated string, by default, there's a limit of
+100 characters.

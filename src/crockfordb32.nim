@@ -10,11 +10,18 @@ when hasNint:
 
 const CrockfordBase32Alphabet = "0123456789ABCDEFGHJKMNPQRSTVWXYZ"
 
-proc encode*[T: SomeInteger](_: typedesc[T], number: T): string =
+proc encode*[T: SomeInteger](_: typedesc[T], number: T, length: int = 100): string =
   ## Encodes an integer as a crockford base32 string.
-  var num = number
+  var
+    num = number
+    count = 0
 
   while num > 0:
+    if count >= length:
+      break
+
+    inc count
+
     let remainder = num mod 32.T
 
     result.insert($CrockfordBase32Alphabet[remainder])
@@ -36,9 +43,11 @@ proc decode*[T: SomeInteger](_: typedesc[T], inp: string): T =
     result = result * 32.T + value.T
 
 when declared(nint128):
-  proc encode*[T: SomeInt128](_: typedesc[T], number: T): string =
+  proc encode*[T: SomeInt128](_: typedesc[T], number: T, length: int = 100): string =
     ## Encodes a 128-bit integer as a crockford base32 string.
-    var num = number
+    var
+      num = number
+      count = 0
 
     when T is Int128:
       template i(n: SomeInteger): Int128 = i128(n)
@@ -47,6 +56,11 @@ when declared(nint128):
       template i(n: SomeInteger): Uint128 = u128(n)
 
     while num > i(0):
+      if count >= length:
+        break
+
+      inc count
+
       let remainder = (num mod i(32)).lo.int
 
       result = CrockfordBase32Alphabet[remainder] & result
