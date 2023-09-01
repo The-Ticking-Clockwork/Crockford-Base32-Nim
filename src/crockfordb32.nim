@@ -17,12 +17,16 @@ proc encode*[T: SomeInteger](_: typedesc[T], number: T): string =
   while num > 0:
     let remainder = num mod 32.T
 
-    result = CrockfordBase32Alphabet[remainder] & result
+    result.insert($CrockfordBase32Alphabet[remainder])
     num = num div 32.T
 
-proc decode*[T: SomeInteger](_: typedesc[T], encoded: string): T =
+proc decode*[T: SomeInteger](_: typedesc[T], inp: string): T =
   ## Decodes a number from crockford base32, raises a ValueError if
   ## it cannot be decoded.
+  let encoded = inp.toUpperAscii().multiReplace(
+    ("O", "0"), ("I", "1"), ("L", "1")
+  )
+
   for chr in encoded:
     let value = CrockfordBase32Alphabet.find(chr)
 

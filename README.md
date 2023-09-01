@@ -11,3 +11,14 @@ unimplemented, but planned to be added in the future.
 
 This project is also licensed under CC0, so it can be used in any way,
 shape or form! No credit needed!
+
+## Usage
+```nim
+import crockfordb32
+
+let encoded = int.encode(2829)
+echo encoded  # Output is `2RD`
+
+let decoded = int.decode("2RD")
+echo decoded  # Output is `2829`
+```
