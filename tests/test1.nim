@@ -16,7 +16,7 @@ when hasNint:
   import nint128
 
 test "Encode Numbers":
-  let a = encode(int, 2829, 3) == "2RD"
+  let a = encode(int, 2829) == "2RD"
   echo "encode(int, 2829) == \"2RD\", ", a
   check a
 

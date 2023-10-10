@@ -10,7 +10,7 @@ in your project, we support encoding or decoding of those types too!
 unimplemented, but planned to be added in the future.
 
 This project is also licensed under CC0, so it can be used in any way,
-shape or form! No credit needed!
+shape or form! No credit needed (but still appreciated)!
 
 ## Usage
 ```nim
@@ -24,5 +24,5 @@ echo decoded  # Output is `2829`
 ```
 
 The `encode` functions additionally have a length parameter allowing
-you to truncate the generated string, by default, there's a limit of
-100 characters.
+you to pad the generated string (for example, ULIDs must be 26
+characters long).
