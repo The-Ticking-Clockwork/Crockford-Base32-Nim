@@ -2,11 +2,14 @@ import std/[
   strutils
 ]
 
-const hasNint = compiles:
-  import pkg/nint128
+when not defined(js):
+  const HasNint = compiles do: import pkg/nint128
 
-when hasNint:
-  import pkg/nint128
+  when HasNint:
+    import pkg/nint128
+
+else:
+  const HasNint = false
 
 const CrockfordBase32Alphabet = "0123456789ABCDEFGHJKMNPQRSTVWXYZ"
 
@@ -46,7 +49,7 @@ proc decode*[T: SomeInteger](_: typedesc[T], inp: string): T =
 
     result = result * 32.T + value.T
 
-when declared(nint128):
+when defined(HasNint):
   proc encode*[T: SomeInt128](_: typedesc[T], number: T, length: int = -1): string =
     ## Encodes a 128-bit integer as a crockford base32 string,
     ## appending 0s for padding (this does nothing to the encoded
