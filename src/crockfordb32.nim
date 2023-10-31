@@ -47,7 +47,7 @@ proc decode*[T: SomeInteger](_: typedesc[T], inp: string): T =
     result = result * 32.T + value.T
 
 when declared(nint128):
-  proc encode*[T: SomeInt128](_: typedesc[T], number: T, length: int = 100): string =
+  proc encode*[T: SomeInt128](_: typedesc[T], number: T, length: int = -1): string =
     ## Encodes a 128-bit integer as a crockford base32 string,
     ## appending 0s for padding (this does nothing to the encoded
     ## data, so it may exceed the given `length`).
@@ -90,3 +90,38 @@ when declared(nint128):
         raise newException(ValueError, "Invalid character in encoded string")
 
       result = result * i(32) + i(value)
+
+when defined(js):
+  import std/jsbigints
+
+  proc encode*(_: typedesc[JsBigInt], number: JsBigInt, length: int = -1): string =
+    ## Encodes a JsBigInt as a crockford base32 string,
+    ## appending 0s for padding (this does nothing to the encoded
+    ## data, so it may exceed the given `length`).
+    var
+      num = number
+      count = 0'big
+
+    while num > 0'big:
+      inc count
+
+      let remainder = (num mod 32'big).toNumber()
+
+      result = CrockfordBase32Alphabet[remainder] & result
+      num = num div 32'big
+
+    var rLen = length - result.len
+
+    if rLen > 0:
+      result = repeat('0', rLen) & result
+
+  proc decode*(_: typedesc[JsBigInt], encoded: string): JsBigInt =
+    ## Decodes a JsBigInt from crockford base32, raises a
+    ## ValueError if it cannot be decoded.
+    for chr in encoded:
+      let value = CrockfordBase32Alphabet.find(chr)
+
+      if value == -1:
+        raise newException(ValueError, "Invalid character in encoded string")
+
+      result = result * 32'big + big(value)
