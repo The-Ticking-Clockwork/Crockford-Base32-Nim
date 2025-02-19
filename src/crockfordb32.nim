@@ -1,18 +1,9 @@
 import std/[
-  compilesettings,
   strutils
 ]
 
 when not defined(js):
-  const HasNint = block:
-    var res = false
-
-    for i in querySettingSeq(lazyPaths) & querySettingSeq(nimblePaths):
-      if "nint128" in i:
-        res = true
-        break
-
-    res
+  const HasNint = defined(crockfordb32NintSupport)
 
   when HasNint:
     import nint128

@@ -11,13 +11,12 @@ import std/[
   unittest
 ]
 
-import crockfordb32
-
 when not defined(js):
   const HasNint = block:
     var res = false
 
     for i in querySettingSeq(lazyPaths) & querySettingSeq(nimblePaths):
+      echo i
       if "nint128" in i:
         res = true
         break
@@ -25,12 +24,17 @@ when not defined(js):
     res    
 
   when HasNint:
+    {.define: crockfordb32NintSupport.}
     import nint128
 
 else:
   import std/jsbigints
 
   const HasNint = false
+
+
+import crockfordb32
+
 
 test "Encode Numbers":
   let a = encode(int, 2829) == "2RD"
