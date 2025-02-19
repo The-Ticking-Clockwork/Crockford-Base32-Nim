@@ -1,15 +1,27 @@
 import std/[
+  compilesettings,
   strutils
 ]
 
 when not defined(js):
-  const HasNint = compiles do: import nint128
+  const HasNint = block:
+    var res = false
+
+    for i in querySettingSeq(lazyPaths) & querySettingSeq(nimblePaths):
+      if "nint128" in i:
+        res = true
+        break
+
+    res
 
   when HasNint:
     import nint128
 
 else:
+  import std/jsbigints
+
   const HasNint = false
+
 
 const CrockfordBase32Alphabet = "0123456789ABCDEFGHJKMNPQRSTVWXYZ"
 

@@ -5,12 +5,24 @@
 #
 # To run these tests, simply execute `nimble test`.
 
-import unittest
+import std/[
+  compilesettings,
+  strutils,
+  unittest
+]
 
 import crockfordb32
 
 when not defined(js):
-  const HasNint = compiles do: import nint128
+  const HasNint = block:
+    var res = false
+
+    for i in querySettingSeq(lazyPaths) & querySettingSeq(nimblePaths):
+      if "nint128" in i:
+        res = true
+        break
+
+    res    
 
   when HasNint:
     import nint128

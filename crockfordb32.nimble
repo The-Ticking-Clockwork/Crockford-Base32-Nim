@@ -1,6 +1,6 @@
 # Package
 
-version       = "1.1.0"
+version       = "1.1.1"
 author        = "Yu Vitaqua fer Chronos"
 description   = "A simple implementation of Crockford Base32! Supports nint128, doesn't support check symbols"
 license       = "CC0"
